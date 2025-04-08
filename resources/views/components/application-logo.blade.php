@@ -1,1 +1,1 @@
-<img src="{{ asset('MoneyFlowLogo.png') }}" alt="Logo" class="w-32 h-auto">
+<img src="{{ asset('images/MoneyFlowLogomenor.png') }}" {{ $attributes->merge(['alt' => 'MoneyFlow Logo']) }}>

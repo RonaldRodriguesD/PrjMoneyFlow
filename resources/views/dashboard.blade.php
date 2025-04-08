@@ -1,17 +1,88 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Dashboard') }}
-        </h2>
-    </x-slot>
+    <div class="flex h-screen bg-gray-100">
+        @include('layouts.sidebar')
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 dark:text-gray-100">
-                    {{ __("You're logged in!") }}
+        <!-- Main Content -->
+        <div class="flex-1 overflow-auto">
+            @include('layouts.header')
+
+            <!-- Dashboard Content -->
+            <main class="p-6">
+                <!-- Cards de Resumo -->
+                <div class="grid grid-cols-1 gap-6 mb-6 lg:grid-cols-3">
+                    <!-- Card Receitas -->
+                    <div class="p-4 bg-white rounded-lg shadow-sm">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-base font-normal text-gray-500">Receitas</h3>
+                                <p class="text-2xl font-semibold text-green-600">R$ 0,00</p>
+                            </div>
+                            <div class="p-3 bg-green-100 rounded-full">
+                                <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card Despesas -->
+                    <div class="p-4 bg-white rounded-lg shadow-sm">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-base font-normal text-gray-500">Despesas</h3>
+                                <p class="text-2xl font-semibold text-red-600">R$ 0,00</p>
+                            </div>
+                            <div class="p-3 bg-red-100 rounded-full">
+                                <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card Saldo -->
+                    <div class="p-4 bg-white rounded-lg shadow-sm">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-base font-normal text-gray-500">Saldo</h3>
+                                <p class="text-2xl font-semibold text-blue-600">R$ 0,00</p>
+                            </div>
+                            <div class="p-3 bg-blue-100 rounded-full">
+                                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
+
+                <!-- Gráfico de Evolução Mensal -->
+                <div class="p-4 mb-6 bg-white rounded-lg shadow-sm">
+                    <h3 class="mb-4 text-lg font-semibold text-gray-900">Evolução Mensal</h3>
+                    <div class="h-64">
+                        <canvas id="evolucaoMensal"></canvas>
+                    </div>
+                </div>
+
+                <!-- Cards Inferiores -->
+                <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+                    <!-- Principais Categorias de Despesas -->
+                    <div class="p-4 bg-white rounded-lg shadow-sm">
+                        <h3 class="mb-4 text-lg font-semibold text-gray-900">Principais Categorias de Despesas</h3>
+                        <div class="text-gray-500">
+                            Sem dados para exibir.
+                        </div>
+                    </div>
+
+                    <!-- Fontes de Receita -->
+                    <div class="p-4 bg-white rounded-lg shadow-sm">
+                        <h3 class="mb-4 text-lg font-semibold text-gray-900">Fontes de Receita</h3>
+                        <div class="text-gray-500">
+                            Sem dados para exibir.
+                        </div>
+                    </div>
+                </div>
+            </main>
         </div>
     </div>
 </x-app-layout>
