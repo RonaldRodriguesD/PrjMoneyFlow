@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="flex h-screen bg-gray-100">
+    <div class="flex h-screen bg-gray-800">
         @include('layouts.sidebar')
 
         <!-- Main Content -->
@@ -7,7 +7,7 @@
             @include('layouts.header')
 
             <!-- Budgets Content -->
-            <main class="p-6">
+            <main class="p-6 bg-gray-100">
                 <!-- Header com Seletor de Mês -->
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-2xl font-semibold text-gray-900">Orçamentos Mensais</h2>

@@ -1,5 +1,5 @@
 <!-- Sidebar -->
-<div class="w-64 bg-gray-900 text-white flex flex-col h-full">
+<div class="w-70 bg-gray-900 text-white flex flex-col h-full">
     <!-- Título -->
     <div class="p-4">
         <div class="flex items-center justify-center">
@@ -29,10 +29,10 @@
         </a>
     </nav>
 
-    <!-- Logo na parte inferior -->
+    <!-- Logo na parte inferior
     <div class="p-4">
         <div class="flex items-center justify-center">
             <x-application-logo class="block h-7 w-auto" />
         </div>
-    </div>
+    </div> -->
 </div> 
