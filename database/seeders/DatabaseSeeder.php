@@ -13,7 +13,23 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        User::factory(10)->create();
+
+        Category::factory()->create([
+            "desc" => "Alimentação"
+        ]);
+
+        Category::factory()->create([
+            "desc" => "Transporte"
+        ]);
+
+        Category::factory()->create([
+            "desc" => "Moradia"
+        ]);
+
+        Category::factory()->create([
+            "desc" => "Salário"
+        ]);
 
         User::factory()->create([
             'name' => 'Test User',
