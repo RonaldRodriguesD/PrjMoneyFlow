@@ -8,7 +8,7 @@
 
             <!-- Transactions Content -->
             <main class="p-6 bg-gray-100">
-                <div class="mb-8">
+                <div class="mb-12">
                     <h2 class="text-2xl font-semibold text-gray-900 mb-6">Adicionar Transação</h2>
                     
                     <div class="bg-white rounded-lg shadow-sm p-6">
@@ -33,19 +33,19 @@
                             <div>
                                 <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Descrição</label>
                                 <input type="text" id="description" name="description" placeholder="Ex: Supermercado, Salário, etc." 
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                    class="w-full px-3 py-2 mb-6 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                             </div>
 
                             <div>
                                 <label for="amount" class="block text-sm font-medium text-gray-700 mb-1">Valor (R$)</label>
                                 <input type="number" step="0.01" id="amount" name="amount" placeholder="0.00"
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                    class="w-full px-3 py-2 mb-6 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                             </div>
 
                             <div>
                                 <label for="date" class="block text-sm font-medium text-gray-700 mb-1">Data</label>
                                 <input type="date" id="date" name="date"
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                    class="w-full px-3 py-2 mb-6 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                             </div>
 
                             <div>
@@ -55,7 +55,7 @@
                                         class="flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                                         <option value="">Selecione uma categoria</option>
                                     </select>
-                                    <button type="button" class="ml-2 text-indigo-600 hover:text-indigo-700">
+                                    <button type="button" class="ms-3 text-indigo-600 hover:text-indigo-700">
                                         + Nova categoria
                                     </button>
                                 </div>
@@ -82,7 +82,7 @@
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                                         </svg>
                                     </span>
-                                    <input type="text" placeholder="Buscar transações..." 
+                                    <input type="text" placeholder="    Buscar transações..." 
                                         class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                                 </div>
                             </div>

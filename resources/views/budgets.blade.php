@@ -19,7 +19,7 @@
                 </div>
 
                 <!-- Cards de Resumo -->
-                <div class="grid grid-cols-1 gap-6 mb-8 lg:grid-cols-3">
+                <div class="grid grid-cols-1 gap-6 mb-12 lg:grid-cols-3">
                     <!-- Orçamento Total -->
                     <div class="p-6 bg-white rounded-lg shadow-sm">
                         <div class="flex items-center justify-between">
@@ -77,7 +77,7 @@
                             <div>
                                 <label for="budget_category" class="block text-sm font-medium text-gray-700 mb-1">Categoria</label>
                                 <select id="budget_category" name="category"
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                    class="w-full px-3 py-2 mb-6 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                                     <option value="">Selecione uma categoria</option>
                                 </select>
                             </div>
@@ -85,13 +85,13 @@
                             <div>
                                 <label for="budget_limit" class="block text-sm font-medium text-gray-700 mb-1">Valor Limite (R$)</label>
                                 <input type="number" step="0.01" id="budget_limit" name="limit" placeholder="0.00"
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                    class="w-full px-3 py-2 mb-6 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                             </div>
 
                             <div>
                                 <label for="budget_month" class="block text-sm font-medium text-gray-700 mb-1">Mês</label>
                                 <input type="month" id="budget_month" name="month"
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                    class="w-full px-3 py-2 mb-6 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                             </div>
 
                             <div>

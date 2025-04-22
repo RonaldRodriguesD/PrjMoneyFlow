@@ -7,7 +7,7 @@
             @include('layouts.header')
 
             <!-- Dashboard Content -->
-            <main class="p-6 bg-gray-100">
+            <main class="p-6 h-full bg-gray-100">
                 <!-- Cards de Resumo -->
                 <div class="grid grid-cols-1 gap-6 mb-6 lg:grid-cols-3">
                     <!-- Card Receitas -->
