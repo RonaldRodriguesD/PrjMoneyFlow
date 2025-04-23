@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Category;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -16,19 +16,19 @@ class DatabaseSeeder extends Seeder
         User::factory(10)->create();
 
         Category::factory()->create([
-            "desc" => "Alimentação"
+            'desc' => 'Alimentação',
         ]);
 
         Category::factory()->create([
-            "desc" => "Transporte"
+            'desc' => 'Transporte',
         ]);
 
         Category::factory()->create([
-            "desc" => "Moradia"
+            'desc' => 'Moradia',
         ]);
 
         Category::factory()->create([
-            "desc" => "Salário"
+            'desc' => 'Salário',
         ]);
 
         User::factory()->create([
