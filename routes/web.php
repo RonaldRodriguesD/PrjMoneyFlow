@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProfileController, CategoryController, TransactionController, BudgetController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -20,6 +20,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/budgets', function () {
         return view('budgets');
     })->name('budgets');
+
+    Route::resourse('categories', CategoryController::class);
+    Route::resourse('transactions', TransactionController::class);
+    Route::resource('budgets', BudgetController::class);
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
