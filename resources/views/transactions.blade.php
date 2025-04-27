@@ -53,7 +53,10 @@
                                 <div class="flex items-center">
                                     <select id="category" name="category"
                                         class="flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-                                        <option value="">Selecione uma categoria</option>
+                                        <option value="">Selecione uma categoria...</option>
+                                        @foreach ($categories as $category)
+                                        <option value="{{$category->id}}">{{$category->desc}}</option>
+                                        @endforeach
                                     </select>
                                     <a type="button" href="#" onclick="openCategoryModal()" class="ms-3 text-indigo-600 hover:text-indigo-700">
                                         + Nova categoria
@@ -155,10 +158,10 @@
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
                                 <!-- Exemplo de linha - Substitua por dados reais -->
-                                
+                                @foreach($categories as $category)
                                 <tr>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        Transporte
+                                        {{$category->desc}}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
                                         <button onclick="editCategory(2)" class="text-indigo-600 hover:text-indigo-900">
@@ -173,6 +176,7 @@
                                         </button>
                                     </td>
                                 </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
