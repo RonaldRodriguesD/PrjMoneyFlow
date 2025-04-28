@@ -28,8 +28,21 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'categoryDesc' => 'required|string|max:255',
+        ]);
+
+        $category = new Category;
+        $category->desc = $validated['categoryDesc'];
+        $category->save();
+
+        return redirect()->route('transactions')->with([
+            'success' => 'Categoria criada com sucesso!',
+            'openCategoryModal' => true, // sinal pra abrir o modal na pagina
+        ]);
     }
+
+
 
     /**
      * Display the specified resource.

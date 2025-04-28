@@ -123,10 +123,11 @@
         <div class="relative p-6 border w-[500px] max-w-[90vw] shadow-lg rounded-md bg-white">
             <div class="mt-3">
                 <h3 class="text-xl font-medium text-gray-900 mb-4">Nova Categoria</h3>
-                <form id="categoryForm" class="space-y-4">
+                <form id="categoryForm" action="{{route('categories.store')}}" method="POST" class="space-y-4">
+                    @csrf
                     <div>
-                        <label for="categoryName" class="block text-base font-medium text-gray-700 mb-1">Nome da Categoria</label>
-                        <input type="text" id="categoryName" name="categoryName" 
+                        <label for="categoryDesc" class="block text-base font-medium text-gray-700 mb-1">Nome da Categoria</label>
+                        <input type="text" id="categoryDesc" name="categoryDesc" 
                             class="mt-1 block w-full px-3 py-2 text-base rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                     </div>
                     <div class="flex justify-end space-x-6 mt-4">
@@ -134,10 +135,7 @@
                             class="px-4 py-2 text-base bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">
                             Cancelar
                         </button>
-                        <button type="submit" 
-                            class="px-4 py-2 text-base bg-indigo-600 text-white rounded-md hover:bg-indigo-700">
-                            Salvar
-                        </button>
+                        <input type="submit" class="px-4 py-2 text-base bg-indigo-600 text-white rounded-md hover:bg-indigo-700" value="Salvar">
                     </div>
                 </form>
 
@@ -186,6 +184,14 @@
     </div>
 
     @push('scripts')
+    @if(session('openCategoryModal'))
+    <script>
+        window.onload = function() {
+            document.getElementById('categoryModal').classList.remove('hidden');
+        };
+    </script>
+    @endif
+
     <script>
         let currentTransactionType = 'expense';
 
@@ -235,7 +241,7 @@
         }
 
         document.getElementById('categoryForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+            // e.preventDefault();
             const categoryName = document.getElementById('categoryName').value;
             console.log('Salvando categoria:', { name: categoryName });
             closeCategoryModal();

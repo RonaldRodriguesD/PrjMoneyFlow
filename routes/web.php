@@ -24,7 +24,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return view('budgets');
     })->name('budgets');
 
-
+    Route::resource('categories', CategoryController::class);
     Route::get('/transactions', [TransactionController::class, 'create'])->name('transactions');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
