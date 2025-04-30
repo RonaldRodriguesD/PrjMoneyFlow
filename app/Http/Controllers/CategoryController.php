@@ -73,6 +73,11 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        $category->delete();
+
+        return redirect()->route('transactions')->with([
+            'success' => 'Categoria excluído com sucesso!',
+            'openCategoryModal' => true,
+        ]);
     }
 }
