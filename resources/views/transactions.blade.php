@@ -20,7 +20,7 @@
                                 </svg>
                                 Despesa
                             </button>
-                            <button id="incomeBtn" onclick="setTransactionType('income')" class="flex items-center justify-center py-3 px-4 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors">
+                            <button id="incomeBtn" onclick="setTransactionType('income')" class="flex items-center justify-center py-3 px-4 rounded-lg bg-gray-200 text-gray-700 hover:bg-green-500 transition-colors">
                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                                 </svg>
@@ -202,19 +202,25 @@
             const incomeBtn = document.getElementById('incomeBtn');
             const submitBtn = document.getElementById('submitBtn');
 
-            if (type === 'expense') {
+            if (type === 'expense') {                
+                incomeBtn.classList.remove('bg-green-500', 'text-white');
+                
                 expenseBtn.classList.remove('bg-gray-200', 'text-gray-700');
                 expenseBtn.classList.add('bg-red-500', 'text-white');
+                
                 incomeBtn.classList.remove('bg-red-500', 'text-white');
                 incomeBtn.classList.add('bg-gray-200', 'text-gray-700');
+                
                 submitBtn.textContent = 'Adicionar Despesa';
                 submitBtn.classList.remove('bg-green-500', 'hover:bg-green-600');
                 submitBtn.classList.add('bg-red-500', 'hover:bg-red-600');
             } else {
                 expenseBtn.classList.remove('bg-red-500', 'text-white');
                 expenseBtn.classList.add('bg-gray-200', 'text-gray-700');
+                
                 incomeBtn.classList.remove('bg-gray-200', 'text-gray-700');
                 incomeBtn.classList.add('bg-green-500', 'text-white');
+                
                 submitBtn.textContent = 'Adicionar Receita';
                 submitBtn.classList.remove('bg-red-500', 'hover:bg-red-600');
                 submitBtn.classList.add('bg-green-500', 'hover:bg-green-600');
