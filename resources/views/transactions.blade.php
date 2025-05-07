@@ -123,11 +123,14 @@
         <div class="relative p-6 border w-[500px] max-w-[90vw] shadow-lg rounded-md bg-white">
             <div class="mt-3">
                 <h3 class="text-xl font-medium text-gray-900 mb-4">Nova Categoria</h3>
-                <form id="categoryForm" action="{{route('categories.store')}}" method="POST" class="space-y-4">
+                <form id="categoryForm" action="{{isset($editCategory) ? route('categories.update', $editCategory->id) : route('categories.store')}}" method="POST" class="space-y-4">
                     @csrf
+                    @if(isset($editCategory))
+                        @method('PUT')
+                    @endif
                     <div>
                         <label for="categoryDesc" class="block text-base font-medium text-gray-700 mb-1">Nome da Categoria</label>
-                        <input type="text" id="categoryDesc" name="categoryDesc" 
+                        <input type="text" id="categoryDesc" name="categoryDesc" value="{{ $editCategory->desc ?? '' }}" required
                             class="mt-1 block w-full px-3 py-2 text-base rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                     </div>
                     <div class="flex justify-end space-x-6 mt-4">
@@ -161,7 +164,7 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                         {{$category->desc}}
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                                    <td class="flex flex-row justify-end px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
 
                                         <form action="/categories/{{$category->id}}" id="deleteCategory-{{$category->id}}" method="POST">
                                             @csrf
@@ -173,6 +176,14 @@
                                             </button>
                                         </form>
 
+                                        <form action="{{ route('categories.edit', $category->id)}}" id="updateCategory-{{$category->id}}">
+                                            @csrf
+                                            <button form="updateCategory-{{$category->id}}" class="text-indigo-600 hover:text-indigo-900" type="submit">
+                                                <svg class="w-5 h-5 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                                </svg>
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -185,7 +196,7 @@
     </div>
 
     @push('scripts')
-    @if(session('openCategoryModal'))
+    @if(session('openCategoryModal') || isset($editCategory))
     <script>
         window.onload = function() {
             document.getElementById('categoryModal').classList.remove('hidden');
@@ -233,6 +244,7 @@
 
         function closeCategoryModal() {
             document.getElementById('categoryModal').classList.add('hidden');
+            document.getElementById('categoryDesc').value = '';
         }
 
 
@@ -245,9 +257,3 @@
     </script>
     @endpush
 </x-app-layout> 
-
-<!-- <button form="deleteCategory" class="text-indigo-600 hover:text-indigo-900" type="submit" onclick="if(confirm('Deseja realmente excluir esta categoria?')){ }else{return false;}">
-    <svg class="w-5 h-5 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-    </svg>
-</button> -->

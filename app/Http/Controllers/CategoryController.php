@@ -57,7 +57,13 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        //
+        $categories = Category::all();
+
+        return view('transactions', [
+            'editCategory' => $category,
+            'categories' => $categories,
+            'openCategoryModal' => true,
+        ]);
     }
 
     /**
@@ -65,7 +71,20 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
+        $request->validate([
+            'categoryDesc' => 'required|string|max:255',
+        ]);
+    
+        // Atualiza a categoria com os dados recebidos
+        $category->desc = $request->input('categoryDesc');
+        $category->save();
+    
+        // Redireciona com mensagem de sucesso
+        return redirect()->route('transactions')->with([
+            'success' => 'Categoria atualizada com sucesso!',
+            'openCategoryModal' => true
+        ]);
+    
     }
 
     /**
