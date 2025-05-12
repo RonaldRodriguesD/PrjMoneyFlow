@@ -30,7 +30,48 @@ class TransactionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'description' => 'required|string|max:255',
+            'amount' => 'required|numeric',
+            'date' => 'required|date',
+            'category' => 'required|exists:categories,id',
+            'transactionType' => 'required|in:income,expense',
+            'recurrent' => 'nullable|boolean',
+        ]);
+
+        $transaction = new Transaction;
+        $transaction->desc = $validated['description'];
+        $transaction->value = $validated['amount'];
+        $transaction->date = $validated['date'];
+        $transaction->category_id = $validated['category'];
+        $transaction->type = $validated['transactionType'];
+        $transaction->recurrent = $request->has('recurrent');
+        $transaction->user_id = auth()->id();
+        $transaction->save();
+
+        if ($transaction->recurrent) {
+            $originalDate = \Carbon\Carbon::parse($validated['date']);
+    
+            for ($i = 1; $i < 12; $i++) {
+                $newDate = $originalDate->copy()->addMonths($i);
+    
+                // Criação da transação mensal
+                Transaction::create([
+                    'desc' => $validated['description'],
+                    'value' => $validated['amount'],
+                    'date' => $newDate->format('Y-m-d'),
+                    'category_id' => $validated['category'],
+                    'type' => $validated['transactionType'],
+                    'recurrent' => true,
+                    'user_id' => auth()->id(),
+                ]);
+            }
+        }
+
+        return redirect()->route('transactions.create')->with([
+            'success' => 'Transação registrada com sucesso!',
+        ]);
+
     }
 
     /**

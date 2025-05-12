@@ -29,7 +29,9 @@
                         </div>
 
                         <!-- Formulário -->
-                        <form class="space-y-4">
+                        <form class="space-y-4" action="{{ route('transactions.store') }}" method="POST" class="space-y-4">
+                            @csrf
+                            @method('POST')
                             <div>
                                 <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Descrição</label>
                                 <input type="text" id="description" name="description" placeholder="Ex: Supermercado, Salário, etc." 
@@ -50,7 +52,7 @@
 
                             <div>
                                 <label for="category" class="block text-sm font-medium text-gray-700 mb-1">Categoria</label>
-                                <div class="flex items-center">
+                                <div class="flex items-center mb-4">
                                     <select id="category" name="category"
                                         class="flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                                         <option value="">Selecione uma categoria...</option>
@@ -63,6 +65,14 @@
                                     </a>
                                 </div>
                             </div>
+
+                            <label class="relative inline-flex items-center mb-4 cursor-pointer">
+                                <input type="checkbox" value="{{true}}" name="recurrent" class="sr-only peer">
+                                <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                                <span class="ml-3 text-sm font-medium text-gray-700">Recorrente</span>
+                            </label>
+
+                            <input type="hidden" id="transactionType" name="transactionType" value="expense">
 
                             <button type="submit" id="submitBtn" class="w-full py-3 px-4 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
                                 Adicionar Despesa
@@ -209,6 +219,7 @@
 
         function setTransactionType(type) {
             currentTransactionType = type;
+            document.getElementById('transactionType').value = type;
             const expenseBtn = document.getElementById('expenseBtn');
             const incomeBtn = document.getElementById('incomeBtn');
             const submitBtn = document.getElementById('submitBtn');

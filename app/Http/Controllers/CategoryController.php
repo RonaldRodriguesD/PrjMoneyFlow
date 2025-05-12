@@ -36,7 +36,7 @@ class CategoryController extends Controller
         $category->desc = $validated['categoryDesc'];
         $category->save();
 
-        return redirect()->route('transactions')->with([
+        return redirect()->route('transactions.create')->with([
             'success' => 'Categoria criada com sucesso!',
             'openCategoryModal' => true, // sinal pra abrir o modal na pagina
         ]);
@@ -80,7 +80,7 @@ class CategoryController extends Controller
         $category->save();
     
         // Redireciona com mensagem de sucesso
-        return redirect()->route('transactions')->with([
+        return redirect()->route('transactions.create')->with([
             'success' => 'Categoria atualizada com sucesso!',
             'openCategoryModal' => true
         ]);
@@ -94,7 +94,7 @@ class CategoryController extends Controller
     {
         $category->delete();
 
-        return redirect()->route('transactions')->with([
+        return redirect()->route('transactions.create')->with([
             'success' => 'Categoria excluído com sucesso!',
             'openCategoryModal' => true,
         ]);

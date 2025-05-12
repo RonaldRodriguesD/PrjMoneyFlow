@@ -25,7 +25,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('budgets');
 
     Route::resource('categories', CategoryController::class);
-    Route::get('/transactions', [TransactionController::class, 'create'])->name('transactions');
+    Route::resource('transactions', TransactionController::class);
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
