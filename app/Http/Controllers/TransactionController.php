@@ -46,16 +46,17 @@ class TransactionController extends Controller
         $transaction->category_id = $validated['category'];
         $transaction->type = $validated['transactionType'];
         $transaction->recurrent = $request->has('recurrent');
+
         $transaction->user_id = auth()->id();
         $transaction->save();
 
         if ($transaction->recurrent) {
             $originalDate = \Carbon\Carbon::parse($validated['date']);
+            $months = (int) $request->input('recurrenceMonths', 1);
     
-            for ($i = 1; $i < 12; $i++) {
+            for ($i = 1; $i < $months; $i++) {
                 $newDate = $originalDate->copy()->addMonths($i);
     
-                // Criação da transação mensal
                 Transaction::create([
                     'desc' => $validated['description'],
                     'value' => $validated['amount'],

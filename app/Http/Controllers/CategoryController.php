@@ -38,7 +38,7 @@ class CategoryController extends Controller
 
         return redirect()->route('transactions.create')->with([
             'success' => 'Categoria criada com sucesso!',
-            'openCategoryModal' => true, // sinal pra abrir o modal na pagina
+            'openCategoryModal' => true,
         ]);
     }
 
@@ -75,14 +75,12 @@ class CategoryController extends Controller
             'categoryDesc' => 'required|string|max:255',
         ]);
     
-        // Atualiza a categoria com os dados recebidos
         $category->desc = $request->input('categoryDesc');
         $category->save();
     
-        // Redireciona com mensagem de sucesso
         return redirect()->route('transactions.create')->with([
             'success' => 'Categoria atualizada com sucesso!',
-            'openCategoryModal' => true
+            'openCategoryModal' => true,
         ]);
     
     }
