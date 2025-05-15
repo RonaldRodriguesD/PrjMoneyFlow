@@ -15,4 +15,8 @@ class Transaction extends Model
         'recurrent',
         'user_id',
     ];
+
+    public function category(){
+        return $this->belongsTo(Category::class);
+    }
 }

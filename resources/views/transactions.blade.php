@@ -112,24 +112,119 @@
                             </div>
                             
                             <div class="flex items-center space-x-4 ml-4">
-                                <select class="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-                                    <option>Todos</option>
-                                    <option>Receitas</option>
-                                    <option>Despesas</option>
-                                </select>
-                                
-                                <select class="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-                                    <option>Data (mais recente)</option>
-                                    <option>Data (mais antiga)</option>
-                                    <option>Valor (maior)</option>
-                                    <option>Valor (menor)</option>
-                                </select>
+                                <form method="GET" action="{{ route('transactions.create') }}" class="flex items-center space-x-4 ml-4">
+                                    <select name="type" onchange="this.form.submit()" class="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                        <option value="">Todos</option>
+                                        <option value="income" {{ request('type') == 'income' ? 'selected' : '' }}>Receitas</option>
+                                        <option value="expense" {{ request('type') == 'expense' ? 'selected' : '' }}>Despesas</option>
+                                    </select>
+
+                                    <select name="sort" onchange="this.form.submit()" class="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                        <option value="recent" {{ request('sort') == 'recent' ? 'selected' : '' }}>Data (mais antiga)</option>
+                                        <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>Data (mais recente)</option>
+                                        <option value="higher" {{ request('sort') == 'higher' ? 'selected' : '' }}>Valor (maior)</option>
+                                        <option value="lower" {{ request('sort') == 'lower' ? 'selected' : '' }}>Valor (menor)</option>
+                                    </select>
+                                </form>
                             </div>
                         </div>
 
                         <!-- Lista de Transações -->
                         <div class="text-gray-500 text-center py-8">
-                            Nenhuma transação encontrada.
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50 sticky top-0">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Descrição
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Categoria
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Valor
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Data
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Ação
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    @foreach($transactions as $transaction)
+                                    <tr>
+                                        @if($transaction->type == "expense")
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-red-500">
+                                                {{$transaction->desc}}
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-red-500">
+                                                {{$transaction->category->desc ?? 'Não encontrada'}}
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-red-500">
+                                                {{$transaction->value}}
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-red-500">
+                                                {{$transaction->date}}
+                                            </td>
+                                            <td class="flex flex-row justify-center px-6 py-4 whitespace-nowrap text-sm text-red-500">
+                                                <form action="/transactions/{{$transaction->id}}" id="deleteTransaction-{{$transaction->id}}" method="POST">
+                                                    @csrf
+                                                    @method("delete")
+                                                    <button form="deleteTransaction-{{$transaction->id}}" class="text-red-600 mr-2 hover:text-red-900" type="submit" onclick="if(confirm('Deseja realmente excluir esta transação?')){ }else{return false;}">
+                                                        <svg class="w-5 h-5 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                                        </svg>
+                                                    </button>
+                                                </form>
+
+                                                <form action="{{ route('transactions.edit', $transaction->id)}}" id="updateTransaction-{{$transaction->id}}">
+                                                    @csrf
+                                                    <button form="updateTransaction-{{$transaction->id}}" class="text-indigo-600 ml-2 hover:text-indigo-900" type="submit">
+                                                        <svg class="w-5 h-5 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                                        </svg>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        @else
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                            {{$transaction->desc}}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                            {{$transaction->category->desc ?? 'Não encontrada'}}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                            {{$transaction->value}}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                            {{$transaction->date}}
+                                        </td>
+                                        <td class="flex flex-row justify-center px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                            <form action="/transactions/{{$transaction->id}}" id="deleteTransaction-{{$transaction->id}}" method="POST">
+                                                @csrf
+                                                @method("delete")
+                                                <button form="deleteTransaction-{{$transaction->id}}" class="text-red-600 mr-2 hover:text-red-900" type="submit" onclick="if(confirm('Deseja realmente excluir esta transação?')){ }else{return false;}">
+                                                    <svg class="w-5 h-5 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                                    </svg>
+                                                </button>
+                                            </form>
+
+                                            <form action="{{ route('transactions.edit', $transaction->id)}}" id="updateTransaction-{{$transaction->id}}">
+                                                @csrf
+                                                <button form="updateTransaction-{{$transaction->id}}" class="text-indigo-600 ml-2 hover:text-indigo-900" type="submit">
+                                                    <svg class="w-5 h-5 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                                    </svg>
+                                                </button>
+                                            </form>
+                                        </td>
+                                        @endif
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

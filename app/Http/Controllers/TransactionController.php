@@ -19,10 +19,34 @@ class TransactionController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
         $categories = Category::all();
-        return view('transactions', ['categories'=>$categories]);
+        $query = Transaction::query()->with('category')->where('user_id', auth()->id());
+
+        if ($request->filled('type')) {
+            $query->where('type', $request->input('type')); 
+        }
+
+        switch ($request->input('sort')) {
+            case 'oldest':
+                $query->orderBy('date', 'desc');
+                break;
+            case 'higher':
+                $query->orderBy('value', 'desc');
+                break;
+            case 'lower':
+                $query->orderBy('value', 'asc');
+                break;
+            default:
+                $query->orderBy('date', 'asc');
+        }
+
+        $transactions = $query->get();
+        return view('transactions', [
+            'categories' => $categories,
+            'transactions' => $transactions,
+        ]);
     }
 
     /**
