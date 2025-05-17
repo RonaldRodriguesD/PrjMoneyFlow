@@ -28,6 +28,11 @@ class TransactionController extends Controller
             $query->where('type', $request->input('type')); 
         }
 
+        $month = $request->input('month', now()->format('m'));
+        $year = $request->input('year', now()->format('Y'));
+
+        $query->whereMonth('date', $month)->whereYear('date', $year);
+
         switch ($request->input('sort')) {
             case 'oldest':
                 $query->orderBy('date', 'desc');

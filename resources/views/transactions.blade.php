@@ -112,7 +112,42 @@
                             </div>
                             
                             <div class="flex items-center space-x-4 ml-4">
+                                @php
+                                    $currentMonth = request('month', now()->format('m'));
+                                    $currentYear = request('year', now()->format('Y'));
+
+                                    $meses = [
+                                        '01' => 'Janeiro',
+                                        '02' => 'Fevereiro',
+                                        '03' => 'Março',
+                                        '04' => 'Abril',
+                                        '05' => 'Maio',
+                                        '06' => 'Junho',
+                                        '07' => 'Julho',
+                                        '08' => 'Agosto',
+                                        '09' => 'Setembro',
+                                        '10' => 'Outubro',
+                                        '11' => 'Novembro',
+                                        '12' => 'Dezembro',
+                                    ];
+                                @endphp
                                 <form method="GET" action="{{ route('transactions.create') }}" class="flex items-center space-x-4 ml-4">
+                                    <select name="month" onchange="this.form.submit()" class="px-3 py-2 border rounded-md">
+                                        @foreach ($meses as $numero => $nome)
+                                            <option value="{{ $numero }}" {{ $currentMonth == $numero ? 'selected' : '' }}>
+                                                {{ $nome }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+
+                                    <select name="year" onchange="this.form.submit()" class="px-3 py-2 border rounded-md">
+                                        @for ($y = now()->year + 5; $y >= now()->year - 5; $y--)
+                                            <option value="{{ $y }}" {{ $currentYear == $y ? 'selected' : '' }}>
+                                                {{ $y }}
+                                            </option>
+                                        @endfor
+                                    </select>
+
                                     <select name="type" onchange="this.form.submit()" class="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                                         <option value="">Todos</option>
                                         <option value="income" {{ request('type') == 'income' ? 'selected' : '' }}>Receitas</option>
