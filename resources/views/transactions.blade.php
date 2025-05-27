@@ -106,7 +106,7 @@
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                                         </svg>
                                     </span>
-                                    <input type="text" placeholder="    Buscar transações..." 
+                                    <input type="text" id="searchInput" name="search" placeholder="    Buscar transações..." 
                                         class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                                 </div>
                             </div>
@@ -131,8 +131,8 @@
                                         '12' => 'Dezembro',
                                     ];
                                 @endphp
-                                <form method="GET" action="{{ route('transactions.create') }}" class="flex items-center space-x-4 ml-4">
-                                    <select name="month" onchange="this.form.submit()" class="px-3 py-2 border rounded-md">
+                                <form id="filterForm" method="GET" action="{{ route('transactions.create') }}" class="flex items-center space-x-4 ml-4">
+                                    <select name="month" class="px-3 py-2 border rounded-md">
                                         @foreach ($meses as $numero => $nome)
                                             <option value="{{ $numero }}" {{ $currentMonth == $numero ? 'selected' : '' }}>
                                                 {{ $nome }}
@@ -140,7 +140,7 @@
                                         @endforeach
                                     </select>
 
-                                    <select name="year" onchange="this.form.submit()" class="px-3 py-2 border rounded-md">
+                                    <select name="year" class="px-3 py-2 border rounded-md">
                                         @for ($y = now()->year + 5; $y >= now()->year - 5; $y--)
                                             <option value="{{ $y }}" {{ $currentYear == $y ? 'selected' : '' }}>
                                                 {{ $y }}
@@ -148,18 +148,22 @@
                                         @endfor
                                     </select>
 
-                                    <select name="type" onchange="this.form.submit()" class="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                    <select name="type" class="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                                         <option value="">Todos</option>
                                         <option value="income" {{ request('type') == 'income' ? 'selected' : '' }}>Receitas</option>
                                         <option value="expense" {{ request('type') == 'expense' ? 'selected' : '' }}>Despesas</option>
                                     </select>
 
-                                    <select name="sort" onchange="this.form.submit()" class="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                    <select name="sort" class="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                                         <option value="recent" {{ request('sort') == 'recent' ? 'selected' : '' }}>Data (mais antiga)</option>
                                         <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>Data (mais recente)</option>
                                         <option value="higher" {{ request('sort') == 'higher' ? 'selected' : '' }}>Valor (maior)</option>
                                         <option value="lower" {{ request('sort') == 'lower' ? 'selected' : '' }}>Valor (menor)</option>
                                     </select>
+
+                                    <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">
+                                        Filtrar
+                                    </button>
                                 </form>
                             </div>
                         </div>
@@ -412,6 +416,61 @@
             const categoryName = document.getElementById('categoryName').value;
             console.log('Salvando categoria:', { name: categoryName });
             closeCategoryModal();
+        });
+
+        // Adiciona debounce para evitar muitas requisições
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Função para atualizar a tabela
+        function updateTable() {
+            const formData = new FormData(document.getElementById('filterForm'));
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput.value) {
+                formData.append('search', searchInput.value);
+            }
+            
+            const searchParams = new URLSearchParams(formData);
+            
+            // Atualiza a URL sem recarregar a página
+            window.history.pushState({}, '', `${window.location.pathname}?${searchParams.toString()}`);
+            
+            // Faz a requisição AJAX
+            fetch(`${window.location.pathname}?${searchParams.toString()}`, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.text())
+            .then(html => {
+                // Atualiza apenas a tabela de transações
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const newTable = doc.querySelector('table');
+                const currentTable = document.querySelector('table');
+                currentTable.parentNode.replaceChild(newTable, currentTable);
+            })
+            .catch(error => {
+                console.error('Erro ao atualizar os dados:', error);
+            });
+        }
+
+        // Adiciona o evento de busca em tempo real
+        document.getElementById('searchInput').addEventListener('input', debounce(updateTable, 500));
+
+        // Atualiza o evento do formulário de filtros para usar a mesma função
+        document.getElementById('filterForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            updateTable();
         });
     </script>
     @endpush

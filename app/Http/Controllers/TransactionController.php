@@ -28,6 +28,10 @@ class TransactionController extends Controller
             $query->where('type', $request->input('type')); 
         }
 
+        if ($request->filled('search')) {
+            $query->where('desc', 'like', '%' . $request->input('search') . '%');
+        }
+
         $month = $request->input('month', now()->format('m'));
         $year = $request->input('year', now()->format('Y'));
 
@@ -48,6 +52,14 @@ class TransactionController extends Controller
         }
 
         $transactions = $query->get();
+
+        if ($request->ajax()) {
+            return view('transactions', [
+                'categories' => $categories,
+                'transactions' => $transactions,
+            ])->render();
+        }
+
         return view('transactions', [
             'categories' => $categories,
             'transactions' => $transactions,
