@@ -15,7 +15,7 @@
                         <div class="flex items-center justify-between">
                             <div>
                                 <h3 class="text-base font-normal text-gray-500">Receitas</h3>
-                                <p class="text-2xl font-semibold text-green-600">R$ 0,00</p>
+                                <p class="text-2xl font-semibold text-green-600">R$ {{number_format($totalIncome, 2, ',','.')}}</p>
                             </div>
                             <div class="p-3 bg-green-100 rounded-full">
                                 <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -30,7 +30,7 @@
                         <div class="flex items-center justify-between">
                             <div>
                                 <h3 class="text-base font-normal text-gray-500">Despesas</h3>
-                                <p class="text-2xl font-semibold text-red-600">R$ 0,00</p>
+                                <p class="text-2xl font-semibold text-red-600">R$ {{number_format($totalExpense, 2, ',','.')}}</p>
                             </div>
                             <div class="p-3 bg-red-100 rounded-full">
                                 <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -45,7 +45,7 @@
                         <div class="flex items-center justify-between">
                             <div>
                                 <h3 class="text-base font-normal text-gray-500">Saldo</h3>
-                                <p class="text-2xl font-semibold text-blue-600">R$ 0,00</p>
+                                <p class="text-2xl font-semibold text-blue-600">R$ {{number_format($balance, 2, ',','.')}}</p>
                             </div>
                             <div class="p-3 bg-blue-100 rounded-full">
                                 <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">

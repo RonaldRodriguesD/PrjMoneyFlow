@@ -145,6 +145,10 @@ class TransactionController extends Controller
      */
     public function destroy(Transaction $transaction)
     {
-        //
+        $transaction->delete();
+
+        return redirect()->route('transactions.create')->with([
+            'success' => 'Transação excluída com sucesso!',
+        ]);
     }
 }
