@@ -29,24 +29,32 @@
                         </div>
 
                         <!-- Formulário -->
-                        <form class="space-y-4" action="{{ route('transactions.store') }}" method="POST" class="space-y-4">
+                        <form class="space-y-4" action="{{ isset($transactionEdit) ? route('transactions.update', $transactionEdit->id) : route('transactions.store') }}" method="POST" class="space-y-4">
                             @csrf
-                            @method('POST')
+                            @if(isset($transactionEdit))
+                                @method('PUT')
+                            @endif
+
+                            <input type="hidden" id="transactionType" name="transactionType" value="{{ old('transactionType', $transactionEdit->type ?? 'expense') }}">
+
                             <div>
                                 <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Descrição</label>
                                 <input type="text" id="description" name="description" placeholder="Ex: Supermercado, Salário, etc." 
+                                    value="{{ old('description', $transactionEdit->desc ?? '') }}" 
                                     class="w-full px-3 py-2 mb-6 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                             </div>
 
                             <div>
                                 <label for="amount" class="block text-sm font-medium text-gray-700 mb-1">Valor (R$)</label>
                                 <input type="number" step="0.01" id="amount" name="amount" placeholder="0.00"
+                                    value="{{ old('amount', $transactionEdit->value ?? '') }}"
                                     class="w-full px-3 py-2 mb-6 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                             </div>
 
                             <div>
                                 <label for="date" class="block text-sm font-medium text-gray-700 mb-1">Data</label>
                                 <input type="date" id="date" name="date"
+                                    value="{{ old('date', isset($transactionEdit) ? \Carbon\Carbon::parse($transactionEdit->date)->format('Y-m-d') : '') }}"
                                     class="w-full px-3 py-2 mb-6 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                             </div>
 
@@ -57,7 +65,9 @@
                                         class="flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                                         <option value="">Selecione uma categoria...</option>
                                         @foreach ($categories as $category)
-                                        <option value="{{$category->id}}">{{$category->desc}}</option>
+                                        <option value="{{$category->id}}" {{ (old('category', $transactionEdit->category_id ?? '') == $category->id) ? 'selected' : '' }}>
+                                            {{$category->desc}}
+                                        </option>
                                         @endforeach
                                     </select>
                                     <a type="button" href="#" onclick="openCategoryModal()" class="ms-3 text-indigo-600 hover:text-indigo-700">
@@ -68,7 +78,7 @@
 
                             <div class="flex items-center space-x-4">
                                 <label class="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" value="{{true}}" name="recurrent" id="recurrentCheck" class="sr-only peer">
+                                    <input type="checkbox" value="{{true}}" {{ old('recurrent', $transactionEdit->recurrent ?? false) ? 'checked' : '' }} name="recurrent" id="recurrentCheck" class="sr-only peer">
                                     <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
                                     <span class="ml-3 text-sm font-medium text-gray-700">Recorrente</span>
                                 </label>
@@ -81,10 +91,8 @@
                                 </select>
                             </div>
 
-                            <input type="hidden" id="transactionType" name="transactionType" value="expense">
-
                             <button type="submit" id="submitBtn" class="w-full py-3 px-4 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
-                                Adicionar Despesa
+                                {{ isset($transactionEdit) ? 'Atualizar Transação' : 'Adicionar ' . (old('transactionType', $transactionEdit->type ?? 'expense') == 'income' ? 'Receita' : 'Despesa') }}
                             </button>
                         </form>
 
@@ -217,7 +225,7 @@
                                                     </button>
                                                 </form>
 
-                                                <form action="{{ route('transactions.edit', $transaction->id)}}" id="updateTransaction-{{$transaction->id}}">
+                                                <form action="{{ route('transactions.edit', $transaction->id)}}" id="updateTransaction-{{$transaction->id}}" method="GET">
                                                     @csrf
                                                     <button form="updateTransaction-{{$transaction->id}}" class="text-indigo-600 ml-2 hover:text-indigo-900" type="submit">
                                                         <svg class="w-5 h-5 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -129,7 +129,13 @@ class TransactionController extends Controller
      */
     public function edit(Transaction $transaction)
     {
-        //
+        $categories = Category::all();
+
+        return view('transactions', [
+            'transactionEdit' => $transaction,
+            'categories' => $categories,
+            'transactions' => Transaction::where('user_id', auth()->id())->get(),
+        ]);
     }
 
     /**
@@ -137,7 +143,25 @@ class TransactionController extends Controller
      */
     public function update(Request $request, Transaction $transaction)
     {
-        //
+        $validated = $request->validate([
+            'description' => 'required|string|max:255',
+            'amount' => 'required|numeric',
+            'date' => 'required|date',
+            'category' => 'required|exists:categories,id',
+            'transactionType' => 'required|in:income,expense',
+            'recurrent' => 'nullable|boolean',
+        ]);
+
+        $transaction->desc = $validated['description'];
+        $transaction->value = $validated['amount'];
+        $transaction->date = $validated['date'];
+        $transaction->category_id = $validated['category'];
+        $transaction->type = $validated['transactionType'];
+        $transaction->recurrent = $request->has('recurrent');
+
+        $transaction->save();
+
+        return redirect()->route('transactions.create')->with('success', 'Transação atualizada com sucesso!');
     }
 
     /**
