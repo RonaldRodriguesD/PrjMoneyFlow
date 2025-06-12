@@ -85,4 +85,9 @@
             </main>
         </div>
     </div>
+    <script>
+        const labels = @json($labels);
+        const incomeData = @json($incomes);
+        const expenseData = @json($expenses);
+    </script>
 </x-app-layout>

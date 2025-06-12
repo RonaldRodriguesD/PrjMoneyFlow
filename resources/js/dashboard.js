@@ -7,19 +7,19 @@ document.addEventListener('DOMContentLoaded', function() {
     new Chart(ctx, {
         type: 'line',
         data: {
-            labels: ['out. de 2024', 'nov. de 2024', 'dez. de 2024', 'jan. de 2025', 'fev. de 2025', 'mar. de 2025'],
+            labels: labels,
             datasets: [{
                 label: 'Receitas',
-                data: [0, 0, 0, 0, 0, 0],
+                data: incomeData,
                 borderColor: '#10B981',
-                backgroundColor: '#D1FAE5',
+                backgroundColor: 'rgba(16, 185, 129, 0.1)',
                 fill: true
             },
             {
                 label: 'Despesas',
-                data: [0, 0, 0, 0, 0, 0],
+                data: expenseData,
                 borderColor: '#EF4444',
-                backgroundColor: '#FEE2E2',
+                backgroundColor: 'rgba(239, 68, 68, 0.1)',
                 fill: true
             }]
         },
