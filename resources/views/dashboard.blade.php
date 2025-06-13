@@ -68,17 +68,39 @@
                 <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
                     <!-- Principais Categorias de Despesas -->
                     <div class="p-4 bg-white rounded-lg shadow-sm">
-                        <h3 class="mb-4 text-lg font-semibold text-gray-900">Principais Categorias de Despesas</h3>
-                        <div class="text-gray-500">
-                            Sem dados para exibir.
+                        <h3 class="mb-4 text-lg font-semibold text-gray-900">🏷️ Principais Categorias de Despesas</h3>
+                        <div class="text-gray-500 max-w-full">
+                            <ul class="list-disc ml-6 text-red-600">
+                                @forelse ($topExpenseCategories as $item)
+                                    <div class="flex justify-between items-center font-mono text-red-600">
+                                        <span class="mr-2">{{ $item->category->desc }}</span>
+                                        <div class="flex-grow border-t border-dotted border-red-600 mx-2"></div>
+                                        <span class="ml-2">R$ {{ number_format($item->total, 2, ',', '.') }}</span>
+                                    </div>
+                                @empty
+                                    <li>Nenhuma despesa encontrada.</li>
+                                @endforelse
+                            </ul>
                         </div>
                     </div>
 
                     <!-- Fontes de Receita -->
                     <div class="p-4 bg-white rounded-lg shadow-sm">
-                        <h3 class="mb-4 text-lg font-semibold text-gray-900">Fontes de Receita</h3>
+                        <h3 class="mb-4 text-lg font-semibold text-gray-900">💰 Fontes de Receita</h3>
                         <div class="text-gray-500">
-                            Sem dados para exibir.
+                            <ul class="list-disc ml-6 text-green-600">
+                                @forelse ($topIncomeSources as $item)
+                                    <li>
+                                        <div class="flex justify-between items-center font-mono text-green-600">
+                                            <span class="me-2">{{$item->desc}}</span>
+                                            <div class="flex-grow border-t border-dotted border-red-600 mx-2"></div>
+                                            <span class="me-2">R$ {{ number_format($item->total, 2, ',', '.') }}</span>
+                                        </div>
+                                    </li>
+                                @empty
+                                    <li>Nenhuma receita encontrada.</li>
+                                @endforelse
+                            </ul>
                         </div>
                     </div>
                 </div>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Models\Transaction;
 use Carbon\Carbon;
 
@@ -27,7 +28,30 @@ class DashboardController extends Controller
     
         $balance = $totalIncome - $totalExpense;
 
+        //principais ganhos e despesas
+
+        $topExpenseCategories = Transaction::select('category_id', DB::raw('SUM(value) as total'))
+            ->where('user_id', $userId)
+            ->where('type', 'expense')
+            ->whereMonth('date', $now->month)
+            ->whereYear('date', $now->year)
+            ->groupBy('category_id')
+            ->orderByDesc('total')
+            ->with('category')
+            ->take(3)
+            ->get();
+
+        $topIncomeSources = Transaction::where('user_id', auth()->id())
+            ->where('type', 'income')
+            ->whereMonth('date', now()->month)
+            ->whereYear('date', now()->year)
+            ->selectRaw('`desc`, SUM(value) as total')
+            ->groupBy('desc')
+            ->orderByDesc('total')
+            ->take(3)
+            ->get();
         //informações do gráfico
+
         $months = collect();
         $incomeData = [];
         $expenseData = [];
@@ -77,6 +101,8 @@ class DashboardController extends Controller
             'labels' => $months,
             'incomes' => $incomeData,
             'expenses' => $expenseData,
+            'topExpenseCategories' => $topExpenseCategories,
+            'topIncomeSources' => $topIncomeSources,
         ]);
     }
 }
