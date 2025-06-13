@@ -5,31 +5,79 @@ namespace App\Http\Controllers;
 use App\Models\Budget;
 use Illuminate\Http\Request;
 use App\Models\Category;
+use App\Models\Transaction;
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 
 class BudgetController extends Controller
 {
+    private function getAvailableMonths()
+    {
+        $months = [];
+        $startMonth = Carbon::now()->subMonths(6);
+        $endMonth = Carbon::now()->addMonths(6);
+
+        $period = CarbonPeriod::create($startMonth, '1 month', $endMonth);
+
+        foreach ($period as $date) {
+            $monthYear = $date->format('Y-m');
+            $monthName = $date->isoFormat('MMMM [de] YYYY');
+            $months[$monthYear] = ucfirst($monthName);
+        }
+        return $months;
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $currentMonth = request('month', now()->format('m'));
-        $currentYear = request('year', now()->format('Y'));
+        $availableMonths = $this->getAvailableMonths();
+        $selectedMonthYear = request('month_year', now()->format('Y-m'));
+
+        list($year, $month) = explode('-', $selectedMonthYear);
 
         $budgets = Budget::with('category')
             ->where('user_id', auth()->id())
-            ->whereMonth('created_at', $currentMonth)
-            ->whereYear('created_at', $currentYear)
+            ->whereMonth('date', $month)
+            ->whereYear('date', $year)
             ->get();
+
+        $totalBudgetAmount = $budgets->sum('limit');
+
+        $currentSpendAmount = Transaction::where('user_id', auth()->id())
+            ->whereMonth('date', $month)
+            ->whereYear('date', $year)
+            ->where('type', 'expense')
+            ->sum('value');
+
+        $exceededCategoriesCount = 0;
+        $exceededCategoriesNames = [];
+        foreach ($budgets as $budget) {
+            $categorySpend = Transaction::where('user_id', auth()->id())
+                ->where('category_id', $budget->category_id)
+                ->whereMonth('date', $month)
+                ->whereYear('date', $year)
+                ->where('type', 'expense')
+                ->sum('value');
+
+            if ($categorySpend > $budget->limit) {
+                $exceededCategoriesCount++;
+                $exceededCategoriesNames[] = $budget->category->desc;
+            }
+        }
 
         $categories = Category::all();
 
         return view('budgets', [
             'categories' => $categories,
             'budgets' => $budgets,
-            'currentMonth' => $currentMonth,
-            'currentYear' => $currentYear
+            'availableMonths' => $availableMonths,
+            'selectedMonthYear' => $selectedMonthYear,
+            'totalBudgetAmount' => $totalBudgetAmount,
+            'currentSpendAmount' => $currentSpendAmount,
+            'exceededCategoriesCount' => $exceededCategoriesCount,
+            'exceededCategoriesNames' => $exceededCategoriesNames
         ]);
     }
 
@@ -38,21 +86,51 @@ class BudgetController extends Controller
      */
     public function create()
     {
-        $categories = Category::all();
-        $currentMonth = request('month', now()->format('m'));
-        $currentYear = request('year', now()->format('Y'));
+        $availableMonths = $this->getAvailableMonths();
+        $selectedMonthYear = request('month_year', now()->format('Y-m'));
 
+        list($year, $month) = explode('-', $selectedMonthYear);
+
+        $categories = Category::all();
         $budgets = Budget::with('category')
             ->where('user_id', auth()->id())
-            ->whereMonth('created_at', $currentMonth)
-            ->whereYear('created_at', $currentYear)
+            ->whereMonth('date', $month)
+            ->whereYear('date', $year)
             ->get();
+
+        $totalBudgetAmount = $budgets->sum('limit');
+
+        $currentSpendAmount = Transaction::where('user_id', auth()->id())
+            ->whereMonth('date', $month)
+            ->whereYear('date', $year)
+            ->where('type', 'expense')
+            ->sum('value');
+
+        $exceededCategoriesCount = 0;
+        $exceededCategoriesNames = [];
+        foreach ($budgets as $budget) {
+            $categorySpend = Transaction::where('user_id', auth()->id())
+                ->where('category_id', $budget->category_id)
+                ->whereMonth('date', $month)
+                ->whereYear('date', $year)
+                ->where('type', 'expense')
+                ->sum('value');
+
+            if ($categorySpend > $budget->limit) {
+                $exceededCategoriesCount++;
+                $exceededCategoriesNames[] = $budget->category->desc;
+            }
+        }
 
         return view('budgets', [
             'categories' => $categories,
             'budgets' => $budgets,
-            'currentMonth' => $currentMonth,
-            'currentYear' => $currentYear
+            'availableMonths' => $availableMonths,
+            'selectedMonthYear' => $selectedMonthYear,
+            'totalBudgetAmount' => $totalBudgetAmount,
+            'currentSpendAmount' => $currentSpendAmount,
+            'exceededCategoriesCount' => $exceededCategoriesCount,
+            'exceededCategoriesNames' => $exceededCategoriesNames
         ]);
     }
 
@@ -83,11 +161,12 @@ class BudgetController extends Controller
         $budget->category_id = $validated['category'];
         $budget->limit = $validated['limit'];
         $budget->obs = $validated['notes'] ?? '';
+        $budget->date = Carbon::parse($validated['month']);
         $budget->user_id = auth()->id();
         $budget->created_at = Carbon::parse($validated['month']);
         $budget->save();
 
-        return redirect()->route('budgets')->with('success', 'Orçamento definido com sucesso!');
+        return redirect()->route('budgets.index')->with('success', 'Orçamento definido com sucesso!');
     }
 
     /**
@@ -124,6 +203,6 @@ class BudgetController extends Controller
         }
 
         $budget->delete();
-        return redirect()->route('budgets')->with('success', 'Orçamento excluído com sucesso!');
+        return redirect()->route('budgets.index')->with('success', 'Orçamento excluído com sucesso!');
     }
 }

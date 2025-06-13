@@ -11,11 +11,16 @@
                 <!-- Header com Seletor de Mês -->
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-2xl font-semibold text-gray-900">Orçamentos Mensais</h2>
-                    <select class="px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-                        <option>março de 2025</option>
-                        <option>abril de 2025</option>
-                        <option>maio de 2025</option>
-                    </select>
+                    <form action="{{ route('budgets.index') }}" method="GET">
+                        <select name="month_year" onchange="this.form.submit()"
+                            class="px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                            @foreach ($availableMonths as $monthYear => $monthName)
+                                <option value="{{ $monthYear }}" {{ ($monthYear == $selectedMonthYear) ? 'selected' : '' }}>
+                                    {{ $monthName }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </form>
                 </div>
 
                 <!-- Cards de Resumo -->
@@ -25,8 +30,8 @@
                         <div class="flex items-center justify-between">
                             <div>
                                 <h3 class="text-lg font-semibold text-gray-900">Orçamento Total</h3>
-                                <p class="text-2xl font-bold text-blue-600">R$ 0,00</p>
-                                <p class="text-sm text-gray-500">março de 2025</p>
+                                <p class="text-2xl font-bold text-blue-600">R$ {{ number_format($totalBudgetAmount, 2, ',', '.') }}</p>
+                                <p class="text-sm text-gray-500">{{ ucfirst(Carbon\Carbon::parse($selectedMonthYear)->isoFormat('MMMM [de] YYYY')) }}</p>
                             </div>
                             <div class="p-3 bg-blue-100 rounded-full">
                                 <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -41,8 +46,15 @@
                         <div class="flex items-center justify-between">
                             <div>
                                 <h3 class="text-lg font-semibold text-gray-900">Gasto Atual</h3>
-                                <p class="text-2xl font-bold text-purple-600">R$ 0,00</p>
-                                <p class="text-sm text-gray-500">0% do orçamento utilizado</p>
+                                <p class="text-2xl font-bold text-purple-600">R$ {{ number_format($currentSpendAmount, 2, ',', '.') }}</p>
+                                <p class="text-sm text-gray-500">
+                                    @if($totalBudgetAmount > 0)
+                                        {{ number_format(($currentSpendAmount / $totalBudgetAmount) * 100, 2) }}%
+                                    @else
+                                        0%
+                                    @endif
+                                    do orçamento utilizado
+                                </p>
                             </div>
                             <div class="p-3 bg-purple-100 rounded-full">
                                 <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -57,8 +69,14 @@
                         <div class="flex items-center justify-between">
                             <div>
                                 <h3 class="text-lg font-semibold text-gray-900">Categorias Excedidas</h3>
-                                <p class="text-2xl font-bold text-green-600">0</p>
-                                <p class="text-sm text-gray-500">Todos os orçamentos estão dentro do limite</p>
+                                <p class="text-2xl font-bold text-green-600">{{ $exceededCategoriesCount }}</p>
+                                <p class="text-sm text-gray-500">
+                                    @if($exceededCategoriesCount === 0)
+                                        Todos os orçamentos estão dentro do limite
+                                    @else
+                                        Categoria(s) excedida(s): {{ implode(', ', $exceededCategoriesNames) }}
+                                    @endif
+                                </p>
                             </div>
                             <div class="p-3 bg-green-100 rounded-full">
                                 <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
