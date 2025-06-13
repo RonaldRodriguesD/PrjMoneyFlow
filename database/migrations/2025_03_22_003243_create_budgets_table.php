@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('budgets', function (Blueprint $table) {
             $table->id();
             $table->decimal('limit',9,2);
+            $table->date('date');
             $table->string('obs');
             $table->timestamps();
             $table->foreignId('category_id')->references('id')->on('categories');
