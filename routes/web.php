@@ -19,9 +19,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return view('transactions');
     })->name('transactions');
 
-    Route::get('/budgets', function () {
-        return view('budgets');
-    })->name('budgets');
+    Route::get('/budgets', [BudgetController::class, 'create'])->name('budgets');
 
     Route::resource('categories', CategoryController::class);
     Route::resource('transactions', TransactionController::class);

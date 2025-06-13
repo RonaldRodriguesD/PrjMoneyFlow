@@ -73,12 +73,16 @@
                     <!-- Definir Novo Orçamento -->
                     <div class="bg-white rounded-lg shadow-sm p-6">
                         <h3 class="text-lg font-semibold text-gray-900 mb-4">Definir Novo Orçamento</h3>
-                        <form class="space-y-4">
+                        <form action="{{ route('budgets.store') }}" method="POST" class="space-y-4">
+                            @csrf
                             <div>
                                 <label for="budget_category" class="block text-sm font-medium text-gray-700 mb-1">Categoria</label>
                                 <select id="budget_category" name="category"
                                     class="w-full px-3 py-2 mb-6 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                                     <option value="">Selecione uma categoria</option>
+                                        @foreach ($categories as $category)
+                                            <option value="{{$category->id}}">{{$category->desc}}</option>
+                                        @endforeach
                                 </select>
                             </div>
 
@@ -109,9 +113,56 @@
                     <!-- Orçamentos Atuais -->
                     <div class="bg-white rounded-lg shadow-sm p-6">
                         <h3 class="text-lg font-semibold text-gray-900 mb-4">Orçamentos Atuais</h3>
-                        <div class="text-gray-500 text-center py-8">
-                            Nenhum orçamento definido para este mês.
-                        </div>
+                        @if($budgets->isEmpty())
+                            <div class="text-gray-500 text-center py-8">
+                                Nenhum orçamento definido para este mês.
+                            </div>
+                        @else
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Categoria
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Limite
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Observações
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Ações
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white divide-y divide-gray-200">
+                                        @foreach($budgets as $budget)
+                                            <tr>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                    {{ $budget->category->desc }}
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                    R$ {{ number_format($budget->limit, 2, ',', '.') }}
+                                                </td>
+                                                <td class="px-6 py-4 text-sm text-gray-900">
+                                                    {{ $budget->obs }}
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                                    <form action="{{ route('budgets.destroy', $budget) }}" method="POST" class="inline">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="text-red-600 hover:text-red-900" onclick="return confirm('Tem certeza que deseja excluir este orçamento?')">
+                                                            Excluir
+                                                        </button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </main>
