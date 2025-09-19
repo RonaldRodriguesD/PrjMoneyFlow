@@ -95,6 +95,9 @@ return [
             'prefix_indexes' => true,
             'search_path' => 'public',
             'sslmode' => 'prefer',
+            'options' => [ // Adicione esta linha e a próxima
+                'client_flags' => PGSQL_CONNECT_FORCE_V4,
+            ],
         ],
 
         'sqlsrv' => [
