@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->enum('type', ['income','expense']);
             $table->boolean('recurrent');
-            $table->string('desc');
+            $table->string("desc");
             $table->decimal('value',9,2);
             $table->date('date');
             $table->timestamps();

@@ -45,7 +45,7 @@ class DashboardController extends Controller
             ->where('type', 'income')
             ->whereMonth('date', now()->month)
             ->whereYear('date', now()->year)
-            ->selectRaw('`desc`, SUM(value) as total')
+            ->selectRaw('"desc", SUM(value) as total')
             ->groupBy('desc')
             ->orderByDesc('total')
             ->take(3)
