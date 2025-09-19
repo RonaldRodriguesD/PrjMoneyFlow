@@ -95,9 +95,6 @@ return [
             'prefix_indexes' => true,
             'search_path' => 'public',
             'sslmode' => 'prefer',
-            'options' => [ // Adicione esta linha e a próxima
-                'client_flags' => 2,
-            ],
         ],
 
         'sqlsrv' => [
