@@ -96,7 +96,7 @@ return [
             'search_path' => 'public',
             'sslmode' => 'prefer',
             'options' => [ // Adicione esta linha e a próxima
-                'client_flags' => PGSQL_CONNECT_FORCE_V4,
+                'client_flags' => 2,
             ],
         ],
 
